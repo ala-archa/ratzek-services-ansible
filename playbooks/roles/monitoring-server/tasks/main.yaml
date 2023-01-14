@@ -1,0 +1,12 @@
+- ansible.builtin.include_role:
+    name: ansible-prometheus
+- ansible.builtin.include_role:
+    name: ansible-grafana
+- ansible.builtin.include_role:
+    name: nginx-server
+- name: Install vhost into nginx
+  template:
+    src: templates/nginx.grafana.conf.j2
+    dest: /etc/nginx/sites-enabled/grafana.conf
+  notify:
+    - Restart nginx

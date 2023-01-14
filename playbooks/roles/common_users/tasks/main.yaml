@@ -1,0 +1,18 @@
+
+- name: "Add the admin user {{ admin_username }}"
+  user:
+    name: "{{ admin_username }}"
+    comment: "{{ admin_user_description }}"
+    groups: sudo
+
+- name: "Add SSH key for user {{ admin_username }}"
+  ansible.posix.authorized_key:
+    user: "{{ admin_username }}"
+    state: present
+    key: "{{ admin_ssh_key }}"
+
+- name: Add admin SSH key to root account
+  ansible.posix.authorized_key:
+    user: root
+    state: present
+    key: "{{ admin_ssh_key }}"

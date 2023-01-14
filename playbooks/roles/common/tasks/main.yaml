@@ -1,0 +1,11 @@
+
+- ansible.builtin.include_role:
+    name: common_packages
+- ansible.builtin.include_role:
+    name: common_users
+- ansible.builtin.include_role:
+    name: ansible-role-ntp
+- ansible.builtin.include_role:
+    name: ansible-node-exporter
+- ansible.builtin.include_role:
+    name: ansible-role-rsyslog

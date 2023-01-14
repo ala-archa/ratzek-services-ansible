@@ -1,0 +1,19 @@
+
+- ansible.builtin.include_role:
+    name: ansible-role-interfaces
+
+- ansible.builtin.include_role:
+    name: ansible-role-dhcp
+
+- ansible.builtin.include_role:
+    name: ansible-hostapd
+
+- name: Enabled IPv4 forwarding
+  sysctl:
+    name: net.ipv4.ip_forward
+    value: 1
+    state: present
+    reload: yes
+
+- ansible.builtin.include_role:
+    name: ansible-iptables

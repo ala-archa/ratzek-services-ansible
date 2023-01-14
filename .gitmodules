@@ -1,0 +1,31 @@
+[submodule "playbooks/roles/ansible-grafana"]
+	path = playbooks/roles/ansible-grafana
+	url = https://github.com/cloudalchemy/ansible-grafana
+[submodule "playbooks/roles/ansible-role-ntp"]
+	path = playbooks/roles/ansible-role-ntp
+	url = https://github.com/geerlingguy/ansible-role-ntp
+[submodule "playbooks/roles/ansible-node-exporter"]
+	path = playbooks/roles/ansible-node-exporter
+	url = https://github.com/cloudalchemy/ansible-node-exporter
+[submodule "playbooks/roles/ansible-prometheus"]
+	path = playbooks/roles/ansible-prometheus
+	url = https://github.com/cloudalchemy/ansible-prometheus
+[submodule "playbooks/roles/systemd-journald"]
+	path = playbooks/roles/systemd-journald
+	url = https://github.com/stuvusIT/systemd-journald
+[submodule "playbooks/roles/ansible-role-rsyslog"]
+	path = playbooks/roles/ansible-role-rsyslog
+	url = https://github.com/robertdebock/ansible-role-rsyslog
+[submodule "playbooks/roles/ansible-role-bind"]
+	path = playbooks/roles/ansible-role-bind
+	url = https://github.com/bertvv/ansible-role-bind
+[submodule "playbooks/roles/ansible-hostapd"]
+	path = playbooks/roles/ansible-hostapd
+	url = https://github.com/Turgon37/ansible-hostapd
+[submodule "playbooks/roles/ansible-role-dhcp"]
+	path = playbooks/roles/ansible-role-dhcp
+	url = https://github.com/bertvv/ansible-role-dhcp
+
+[submodule "playbooks/roles/ansible-role-interfaces"]
+	path = playbooks/roles/ansible-role-interfaces
+	url = https://github.com/michaelrigart/ansible-role-interfaces

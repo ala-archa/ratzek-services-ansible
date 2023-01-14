@@ -1,0 +1,29 @@
+
+- name: Install nginx
+  become: true
+  package:
+    name: nginx
+    state: present
+  notify:
+    - Restart nginx
+
+- name: Configure nginx
+  template:
+    src: templates/nginx.conf.j2
+    dest: /etc/nginx/nginx.conf
+  notify:
+    - Restart nginx
+
+- name: Configure logrotate for
+  template:
+    src: templates/nginx-logrotate.conf.j2
+    dest: /etc/logrotate.d/nginx
+  # # TODO
+  # notify:
+  #   - Restart nginx
+
+- name: Enable nginx
+  become: true
+  service:
+    name: nginx
+    enabled: true

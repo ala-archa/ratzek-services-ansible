@@ -1,0 +1,119 @@
+
+- name: Setup Ratzek RPI
+  hosts: ratzek-service
+  roles:
+    - role: common
+    - role: sdcard-root
+    - role: monitoring-server
+    - role: ansible-role-bind
+    - role: access-point
+  vars:
+    ntp_timezone: Asia/Bishkek
+    my_public_ip: 10.11.1.1
+    domain_name: ratzek
+
+    admin_username: evgenii
+    admin_user_description: Evgenii Lepikhin
+    admin_ssh_key: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAEAQC/CWhpAFmIYZf35K6CIA4aV39UqQYTwr8W+7C3lDxela411oiv3xd8I7motxOUfREZY70BtkvI8jS7/5TYLnUns4dPljm+rL1SjqWnJPFzhIgWj7ASqA+JUBL927Ns7cXoC6Yjj+qBBl181CwQqb5EVV15dKTZ+Gp7z8XYwt0HqqqPsokosYsSX8jR6QC3avxInL3uUJ1GXSWAk50bGp7TgwC6sqlrZRXv2SGQH2czfph8jbvLOt5YaPesTkiown3kzdWC5d9m6jeiY9hnP+b+qqF0OO1tJHb1afK4pLY9bMlXsAUZtmx240RtByMyK9f9WdXwu4AznHTu+muNR+NS7KtN2AuBr8a6I0ftoH68MwhawiZ8+OVKtAqeJehqZ3PlhZqjAJ7v4x4S1KDQlliusZRVZmxmdOkAAFdVk9qlqMxmPBsAaxtJGCCQNU1GxM05W4yu5jTU3O0WaYzmNAvkBIC+F0h83sTBwUk9jr1w0JkXqhegzkOwad5LD6ltDNDAiTOcgJ8IsNmaBxIYtWxHri5QPstwoqFz/J1rp50IsjBqWLzek7m6HoXjSaHoMyZDZ7so3DGmZdO2WK4GpUeuRVFpwO+9lB1kBclccqZUUZVu/k8S/1rVk1j4Q2mPGJ+/GHCwYVukLMh2lDZ5JdMBBnGK5XvS5JdD3hj1B/H1Lv/Cxl1Ofz9Y0ysC2Ok4Rvi2muO9W5v5cgcWRdJsR33xy4n83nC0ORKBn8diM9uCuw2+xmi3yIIPNG8LBk4sqYGwAYoesV1+5Ah7XbRbTzDdPd0G/UZ4GwvZpNIsFipwXOqkoWfOFYwvknIKXk+NOuZUSrKFLnjsoTn00HzzrM6xtOUu3VnDEzHmwAk45CWlnyuRKxDjG0td10+lSk20sFS0vRUZGeENbGwLtOEr5GrJqVJ4PSidb3DBlaKNYtdbPw+Sd+BYiFN+8iC87iB/0tCL425I6BbprRt9Y7w7+Ft2FRwpADPcapMjfKa8/WywqWedfo21lRCzNzmqeB0LAtpmcih/ZgUxHrBI0xKxYhLkvim0kI6QYrW6A3OtJT2/8i3S8de77jUScItDg6tdmmMMRIrJkJ6KEOxv/6zm/aFterhcTIt3ZF7twCRpipqrKgoj+RuaVOxFsErH3P9LDHwA9EH/MC+V+QxS7EKocg+SVSu/r6rvDJiEzKT3M/GbzpzyeRb5wjAIgYg1Up3d0NGpspDg07BywBnUrrdIzMchlbYxskH0Sdffy3Qui7/tRoRZ97moj4B5xYbBqMq65/horViOPN1aa7H5T7uuPGXYVNnJ0DO+SskNHo/PQlmDIaPKxm5AUnN/v61W8c/VaUXJrjvt4CG61HtSG01NkW2T Evgenii Lepikhin common key"
+
+    node_exporter_web_listen_address: 127.0.0.1:9100
+
+    prometheus_web_listen_address: 127.0.0.1:9090
+    prometheus_targets:
+      node:
+        - targets:
+            - '{{ node_exporter_web_listen_address }}'
+
+    grafana_address: 127.0.0.1
+    grafana_port: 3000
+    grafana_datasources:
+      - name: prometheus
+        type: prometheus
+        access: proxy
+        url: 'http://{{ prometheus_web_listen_address }}'
+        basicAuth: false
+    grafana_security:
+      admin_user: admin
+      admin_password: '{{ grafana_admin_password }}'
+
+    interfaces_ether_interfaces:
+      - device: wlan0
+        allowclass: allow-hotplug
+        bootproto: static
+        address: "{{ my_public_ip }}"
+        netmask: 255.255.255.0
+        network: 10.11.1.0
+        broadcast: 10.11.1.255
+
+    bind_allow_query: ['any']
+    bind_recursion: true
+    bind_forwarders:
+      - 8.8.8.8
+      - 8.8.4.4
+      - 9.9.9.9
+      - 208.67.222.222
+    bind_listen_ipv4: ['any']
+    bind_zones:
+      - name: "{{ domain_name }}"
+        primaries:
+          - "{{ my_public_ip }}"
+        name_servers:
+          - ns
+        hosts:
+          - name: '@'
+            ip: "{{ my_public_ip }}"
+            aliases:
+              - www
+          - name: ns
+            ip: "{{ my_public_ip }}"
+
+    dhcp_global_domain_name_servers: "{{ my_public_ip }}"
+    dhcp_global_domain_name: "{{ domain_name }}"
+    dhcp_global_routers: "{{ my_public_ip }}"
+    dhcp_global_server_name: "{{ domain_name }}"
+    dhcp_subnets:
+      - ip: 10.11.1.0
+        interface: wlan0
+        netmask: 255.255.255.0
+        range_begin: 10.11.1.50
+        range_end: 10.11.1.255
+
+    hostapd__service_configure_systemd: True
+    hostapd__instances:
+      client_ap:
+        state: present
+        interface: wlan0
+        driver: nl80211
+        ssid: test
+        country_code: KG
+        hw_mode: g
+        channel: 6
+        beacon_int: 100
+        macaddr_acl: 0
+        auth_algs: 1
+        ignore_broadcast_ssid: 0
+        wpa: 2
+        wpa_passphrase: "{{ public_wpa_password }}"
+
+    iptables_config: |
+      *filter
+
+      :INPUT ACCEPT [0:0]
+      :FORWARD DROP [0:0]
+      :OUTPUT ACCEPT [0:0]
+
+      -A FORWARD -i eth0 -o wlan0 -m state --state RELATED,ESTABLISHED -j ACCEPT
+      -A FORWARD -i wlan0 -o eth0 -j ACCEPT
+
+      COMMIT
+
+      *nat
+
+      :PREROUTING ACCEPT [0:0]
+      :INPUT ACCEPT [0:0]
+      :OUTPUT ACCEPT [0:0]
+      :POSTROUTING ACCEPT [0:0]
+
+      -A POSTROUTING -o eth0 -j MASQUERADE
+
+      COMMIT

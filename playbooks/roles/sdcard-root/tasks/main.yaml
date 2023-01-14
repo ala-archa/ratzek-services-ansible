@@ -1,0 +1,28 @@
+
+- ansible.builtin.include_role:
+    name: systemd-journald
+  vars:
+    journald_config:
+      Storage: volatile
+      RuntimeMaxUse: 8M
+    journald_wipe_persistent: true
+
+- name: Store logs on tmpfs
+  ansible.posix.mount:
+    path: /var/log
+    src: tmpfs
+    fstype: tmpfs
+    opts: auto,size=64m
+    state: mounted
+  notify:
+    - Restart rsyslog
+
+- name: Store nginx logs on tmpfs
+  ansible.posix.mount:
+    path: /var/log/nginx
+    src: tmpfs
+    fstype: tmpfs
+    opts: auto,size=64m
+    state: mounted
+  notify:
+    - Restart nginx
