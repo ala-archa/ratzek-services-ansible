@@ -1,0 +1,6 @@
+- name: Install vhost into nginx
+  template:
+    src: templates/web.ratzek.conf.j2
+    dest: /etc/nginx/sites-enabled/web.ratzek.conf
+  notify:
+    - Restart nginx
