@@ -7,6 +7,14 @@
   notify:
     - Restart nginx
 
+- name: Install nginx fancyindex
+  become: true
+  package:
+    name: libnginx-mod-http-fancyindex
+    state: present
+  notify:
+    - Restart nginx
+
 - name: Remove default nginx host
   ansible.builtin.file:
     path: /etc/nginx/sites-enabled/default
