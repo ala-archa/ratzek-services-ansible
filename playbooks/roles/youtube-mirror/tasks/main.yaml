@@ -1,0 +1,23 @@
+
+- name: Check if yt-dlp is already installed
+  stat:
+    path: /usr/bin/yt-dlp
+  register: youtubedl_bin
+  tags: ['youtube-mirror']
+
+- name: Install yt-dlp
+  get_url:
+    url: https://github.com/yt-dlp/yt-dlp/releases/download/2023.01.06/yt-dlp_linux_armv7l
+    dest: /usr/bin/yt-dlp
+    mode: 0755
+    force: yes
+  when: not youtubedl_bin.stat.exists  
+  tags: ['youtube-mirror']
+
+- include_tasks: instance.yaml
+  vars:
+    youtube_mirror__instance: "{{ youtube_mirror__instance_defaults|combine(outer_item.value)|combine({'name': outer_item.key}) }}"
+  with_dict: '{{ youtube_mirror__instances }}'
+  loop_control:
+    loop_var: outer_item
+  tags: ['youtube-mirror']

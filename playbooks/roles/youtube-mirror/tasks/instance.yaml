@@ -1,0 +1,49 @@
+
+- name: Check instance
+  assert:
+    that:
+      - youtube_mirror__instance is defined
+    msg: youtube_mirror__instance must be defined
+  tags: ['always', 'youtube-mirror']
+
+- name: Check instance name
+  assert:
+    that:
+      - youtube_mirror__instance.name is defined
+    msg: youtube_mirror__instance.name must be defined
+  tags: ['always', 'youtube-mirror']
+
+- name: Check instance directory
+  assert:
+    that:
+      - youtube_mirror__instance.directory is defined
+    msg: youtube_mirror__instance.directory must be defined
+  tags: ['always', 'youtube-mirror']
+
+- name: Check instance url
+  assert:
+    that:
+      - youtube_mirror__instance.url is defined
+    msg: youtube_mirror__instance.url must be defined
+  tags: ['always', 'youtube-mirror']
+
+- name: Check instance cron_hour
+  assert:
+    that:
+      - youtube_mirror__instance.cron_hour is defined
+    msg: youtube_mirror__instance.cron_hour must be defined
+  tags: ['always', 'youtube-mirror']
+
+- name: "Create directory for youtube mirror '{{ youtube_mirror__instance.name }}'"
+  file:
+    path: "{{ youtube_mirror__instance.directory }}"
+    state: directory
+  tags: ['youtube-mirror']
+
+- name: "Add cronjob for youtube mirror '{{ youtube_mirror__instance.name }}'"
+  ansible.builtin.cron:
+    name: "{{ youtube_mirror__instance.name }}"
+    hour: "{{ youtube_mirror__instance.cron_hour }}"
+    minute: 33
+    job: "cd '{{ youtube_mirror__instance.directory }}' && yt-dlp -ciw -o '%(upload_date>%Y-%m-%d)s %(title)s.%(ext)s' -v '{{ youtube_mirror__instance.url }}' >/dev/null 2>&1"
+  tags: ['youtube-mirror']

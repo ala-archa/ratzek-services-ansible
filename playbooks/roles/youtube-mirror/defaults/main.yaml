@@ -1,0 +1,4 @@
+youtube_mirror__instances: {}
+
+youtube_mirror__instance_defaults:
+  cron_hour: 02

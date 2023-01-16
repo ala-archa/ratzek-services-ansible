@@ -7,6 +7,7 @@
     - role: monitoring-server
     - role: ansible-role-bind
     - role: access-point
+    - role: youtube-mirror
   vars:
     ntp_timezone: Asia/Bishkek
     my_public_ip: 10.11.1.1
@@ -117,3 +118,9 @@
       -A POSTROUTING -o eth0 -j MASQUERADE
 
       COMMIT
+
+    youtube_mirror__instances:
+      - youtube-pavlenko:
+          directory: /var/mirrors/youtube/pavlenko
+          url: https://www.youtube.com/@user-zj5ko4dm3h/videos
+          cron_hour: 14
