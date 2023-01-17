@@ -1,6 +1,7 @@
 
-- ansible.builtin.include_role:
-    name: ansible-role-interfaces
+# FIXME: For some reason Ansible cannot determine interface state correctly
+# - ansible.builtin.include_role:
+#     name: ansible-role-interfaces
 
 - ansible.builtin.include_role:
     name: ansible-role-dhcp
@@ -14,6 +15,56 @@
     value: 1
     state: present
     reload: yes
+
+- name: Install ipset
+  become: true
+  package:
+    name: ipset
+    state: present
+
+- name: Install ipset-persistent
+  become: true
+  package:
+    name: ipset-persistent
+    state: present
+  notify:
+    - Restart netfilter-persistent
+
+- name: Configure ipset
+  template:
+    src: templates/ipsets.j2
+    dest: /etc/iptables/ipsets
+  notify:
+    - Restart netfilter-persistent
+
+- name: Copy systemd unit file
+  copy:
+    src: "traffic-control.service"
+    dest: "/etc/systemd/system/traffic-control.service"
+    owner: "root"
+    group: "root"
+    mode: "0644"
+  register: traffic_control_register_unit
+
+- name: Generate tc script
+  template:
+    src: templates/access-point-tc-restore
+    dest: /usr/bin/access-point-tc-restore
+    owner: "root"
+    group: "root"
+    mode: "0755"
+  register: traffic_control_register_script
+
+- name: Reload systemd daemon
+  command: "systemctl daemon-reload"
+  when: traffic_control_register_unit is changed
+
+- name: Restart tc service
+  service:
+    name: "traffic-control"
+    state: "restarted"
+    enabled: True
+  when: traffic_control_register_script is changed
 
 - ansible.builtin.include_role:
     name: ansible-iptables

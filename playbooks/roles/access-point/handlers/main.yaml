@@ -1,0 +1,6 @@
+
+- name: Restart netfilter-persistent
+  become: true
+  service:
+    name: netfilter-persistent
+    state: restarted
