@@ -7,6 +7,8 @@
     - role: monitoring-server
     - role: ansible-role-bind
     - role: access-point
+      tags:
+        - access-point
     - role: youtube-mirror
     - role: ratzek-portal
   vars:
@@ -87,7 +89,7 @@
         interface: wlan0
         driver: nl80211
         ssid: test
-        country_code: KG
+        country_code: US
         hw_mode: g
         channel: 6
         beacon_int: 100
@@ -96,6 +98,9 @@
         ignore_broadcast_ssid: 0
         wpa: 2
         wpa_passphrase: "{{ public_wpa_password }}"
+        wpa_key_mgmt: WPA-PSK
+        logger_syslog_level: 0
+        ieee80211d: 1
 
     iptables_config: |
       *filter
