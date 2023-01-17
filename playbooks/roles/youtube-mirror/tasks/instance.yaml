@@ -45,5 +45,5 @@
     name: "{{ youtube_mirror__instance.name }}"
     hour: "{{ youtube_mirror__instance.cron_hour }}"
     minute: 33
-    job: "cd '{{ youtube_mirror__instance.directory }}' && yt-dlp -ciw -o '%(upload_date>%Y-%m-%d)s %(title)s.%(ext)s' -v '{{ youtube_mirror__instance.url }}' >/dev/null 2>&1"
+    job: "cd '{{ youtube_mirror__instance.directory }}' && yt-dlp -ciw -o '\\%(upload_date>\\%Y-\\%m-\\%d)s \\%(title)s.\\%(ext)s' -v '{{ youtube_mirror__instance.url }}' >/dev/null 2>&1"
   tags: ['youtube-mirror']
