@@ -37,13 +37,13 @@
 - name: Tune vm.dirty_expire_centisecs
   sysctl:
     name: vm.dirty_expire_centisecs
-    value: 30000
+    value: 90000
     state: present
     reload: yes
 
 - name: Tune vm.dirty_writeback_centisecs
   sysctl:
     name: vm.dirty_writeback_centisecs
-    value: 30000
+    value: 90000
     state: present
     reload: yes
