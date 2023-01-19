@@ -124,7 +124,7 @@
     access_point__ipset_range: 10.11.1.0-10.11.1.255
     access_point__ipset_timeout: 600
     access_point__traffic_limit: 10485760
-    access_point__rate: 100Mbit
+    access_point__rate: 10Mbit
     access_point__shaping_rate: 200kbit
 
     iptables_config: |
