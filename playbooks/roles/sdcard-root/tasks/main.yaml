@@ -26,3 +26,24 @@
     state: mounted
   notify:
     - Restart nginx
+
+- name: Tune vm.dirty_background_ratio
+  sysctl:
+    name: vm.dirty_background_ratio
+    value: 20
+    state: present
+    reload: yes
+
+- name: Tune vm.dirty_expire_centisecs
+  sysctl:
+    name: vm.dirty_expire_centisecs
+    value: 30000
+    state: present
+    reload: yes
+
+- name: Tune vm.dirty_writeback_centisecs
+  sysctl:
+    name: vm.dirty_writeback_centisecs
+    value: 30000
+    state: present
+    reload: yes

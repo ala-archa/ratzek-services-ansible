@@ -4,6 +4,8 @@
   roles:
     - role: common
     - role: sdcard-root
+      tags:
+        - sdcard
     - role: monitoring-server
       tags:
         - monitoring
