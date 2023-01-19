@@ -1,0 +1,35 @@
+# TODO install binary manually:
+# - git clone https://github.com/david-igou/bsbmp-exporter
+# - go build
+
+- name: Ensure I2C is enabled on boot
+  ansible.builtin.lineinfile:
+    path: /boot/config.txt
+    regexp: '^dtparam=i2c_arm='
+    insertafter: '^#dtparam=i2c_arm='
+    line: dtparam=i2c_arm=on
+
+- name: Ensure I2C module is loaded
+  ansible.builtin.lineinfile:
+    path: /etc/modules
+    line: i2c-dev
+
+- name: Copy systemd unit file
+  copy:
+    src: "bsbmp-exporter.service"
+    dest: "/etc/systemd/system/bsbmp-exporter.service"
+    owner: "root"
+    group: "root"
+    mode: "0644"
+  register: bsbmp_exporter_register_unit
+
+- name: Reload systemd daemon
+  command: "systemctl daemon-reload"
+  when: bsbmp_exporter_register_unit is changed
+
+- name: Restart bsbmp-exporter service
+  service:
+    name: "bsbmp-exporter"
+    state: "restarted"
+    enabled: True
+  when: bsbmp_exporter_register_unit is changed

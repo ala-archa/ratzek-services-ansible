@@ -5,11 +5,15 @@
     - role: common
     - role: sdcard-root
     - role: monitoring-server
+      tags:
+        - monitoring
     - role: ansible-role-bind
     - role: access-point
       tags:
         - access-point
     - role: youtube-mirror
+    - role: weather-station
+      tags: weather-station
     - role: ratzek-portal
   vars:
     ntp_timezone: Asia/Bishkek
@@ -27,6 +31,18 @@
       node:
         - targets:
             - '{{ node_exporter_web_listen_address }}'
+      weather-station:
+        - targets:
+            - 127.0.0.1:9756
+    prometheus_scrape_configs:
+      - job_name: node
+        file_sd_configs:
+          - files:
+              - "{{ prometheus_config_dir }}/file_sd/node.yml"
+      - job_name: weather-station
+        file_sd_configs:
+          - files:
+              - "{{ prometheus_config_dir }}/file_sd/weather-station.yml"
 
     grafana_address: 127.0.0.1
     grafana_port: 3000

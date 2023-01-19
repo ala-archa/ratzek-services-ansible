@@ -1,0 +1,11 @@
+[Unit]
+Description=Prometheus exported for I2C BME280 sensor
+Before=network-pre.target
+Conflicts=shutdown.target
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/bsbmp-exporter
+
+[Install]
+WantedBy=basic.target
