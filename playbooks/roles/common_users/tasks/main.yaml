@@ -16,3 +16,9 @@
     user: root
     state: present
     key: "{{ admin_ssh_key }}"
+
+- name: "Add user {{ admin_username }} to sudoers"
+  template:
+    src: templates/sudoers.j2
+    dest: /etc/sudoers.d/010_ansible_admin
+    validate: /usr/sbin/visudo -cf %s
