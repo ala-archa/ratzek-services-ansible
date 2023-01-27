@@ -1,6 +1,12 @@
 
 - name: Setup Ratzek RPI
   hosts: ratzek-service
+  tasks:
+    - name: Set a hostname
+      ansible.builtin.hostname:
+        name: ratzek-service
+      tags:
+        - hostname
   roles:
     - role: common
       tags:
