@@ -4,7 +4,7 @@
   tasks:
     - name: Set a hostname
       ansible.builtin.hostname:
-        name: ratzek-service
+        name: "{{ domain_name }}"
       tags:
         - hostname
   roles:
@@ -27,7 +27,18 @@
     - role: ratzek-portal
   vars:
     ntp_timezone: Asia/Bishkek
-    my_public_ip: 10.11.1.1
+    my_client_ip: 10.11.3.2
+    my_client_ip_network: 10.11.3.0
+    my_client_ip_netmask: 255.255.255.0
+    my_client_ip_broadcast: 10.11.3.255
+
+    my_public_ip: 10.11.4.1
+    my_public_ip_network: 10.11.4.0
+    my_public_ip_netmask: 255.255.255.0
+    my_public_ip_broadcast: 10.11.4.255
+    my_public_dhcp_range_begin: 10.11.4.50
+    my_public_dhcp_range_end: 10.11.4.255
+
     domain_name: ratzek
 
     admin_username: evgenii
@@ -77,9 +88,16 @@
         allowclass: allow-hotplug
         bootproto: static
         address: "{{ my_public_ip }}"
-        netmask: 255.255.255.0
-        network: 10.11.1.0
-        broadcast: 10.11.1.255
+        netmask: "{{ my_public_ip_netmask }}"
+        network: "{{ my_public_ip_network }}"
+        broadcast: "{{ my_public_ip_broadcast }}"
+      - device: eth0
+        allowclass: allow-hotplug
+        bootproto: static
+        address: "{{ my_client_ip }}"
+        netmask: "{{ my_client_ip_netmask }}"
+        network: "{{ my_client_ip_network }}"
+        broadcast: "{{ my_client_ip_broadcast }}"
 
     bind_allow_query: ['any']
     bind_recursion: true
@@ -108,11 +126,11 @@
     dhcp_global_routers: "{{ my_public_ip }}"
     dhcp_global_server_name: "{{ domain_name }}"
     dhcp_subnets:
-      - ip: 10.11.1.0
+      - ip: "{{ my_public_ip_network }}"
         interface: wlan0
         netmask: 255.255.255.0
-        range_begin: 10.11.1.50
-        range_end: 10.11.1.255
+        range_begin: "{{ my_public_dhcp_range_begin }}"
+        range_end: "{{ my_public_dhcp_range_end }}"
 
     hostapd__service_configure_systemd: True
     hostapd__instances:
@@ -135,7 +153,7 @@
         ieee80211d: 1
 
     access_point__ipset_name: clients
-    access_point__ipset_range: 10.11.1.0-10.11.1.255
+    access_point__ipset_range: "{{ my_public_dhcp_range_begin }}-{{ my_public_dhcp_range_end }}"
     access_point__ipset_timeout: 600
     access_point__traffic_limit: 10485760
     access_point__rate: 10Mbit
