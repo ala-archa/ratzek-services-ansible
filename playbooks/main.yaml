@@ -22,6 +22,8 @@
       tags:
         - access-point
     - role: youtube-mirror
+    - role: lepikhin-guidebook-mirror
+      tags: lepikhin-guidebook
     - role: weather-station
       tags: weather-station
     - role: ratzek-portal
@@ -196,3 +198,6 @@
           directory: /var/mirrors/youtube/pavlenko
           url: https://www.youtube.com/@user-zj5ko4dm3h/videos
           cron_hour: 14
+
+    lepikhin_guidebook_mirror_cron_hour: 14
+    lepikhin_guidebook_mirror_directory: /var/mirrors/lepikhin-guidebook

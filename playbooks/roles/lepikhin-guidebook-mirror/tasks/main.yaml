@@ -1,0 +1,38 @@
+
+- name: Check if wget is already installed
+  stat:
+    path: /usr/bin/wget
+  register: wget_bin
+
+- name: Install wget
+  package:
+    name: wget
+    state: present
+  become: true
+  when: not wget_bin.stat.exists
+
+- name: Check cron_hour
+  assert:
+    that:
+      - lepikhin_guidebook_mirror_cron_hour is defined
+    msg: lepikhin_guidebook_mirror_cron_hour must be defined
+  tags: ['always']
+
+- name: Check destination
+  assert:
+    that:
+      - lepikhin_guidebook_mirror_directory is defined
+    msg: lepikhin_guidebook_mirror_directory must be defined
+  tags: ['always']
+
+- name: "Create directory for mirror"
+  file:
+    path: "{{ lepikhin_guidebook_mirror_directory }}"
+    state: directory
+
+- name: "Add cronjob for mirror"
+  ansible.builtin.cron:
+    name: lepikhin_guidebook_mirror
+    hour: "{{ lepikhin_guidebook_mirror_cron_hour }}"
+    minute: 22
+    job: "/usr/bin/wget -q -O '{{ lepikhin_guidebook_mirror_directory }}/lepikhin-guidebook.pdf' https://github.com/johnlepikhin/alpine-guidebook/releases/latest/download/book.pdf >/dev/null 2>&1"
