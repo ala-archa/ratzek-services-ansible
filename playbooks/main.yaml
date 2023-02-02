@@ -33,6 +33,7 @@
     my_client_ip_network: 10.11.3.0
     my_client_ip_netmask: 255.255.255.0
     my_client_ip_broadcast: 10.11.3.255
+    my_client_ip_gateway: 10.11.3.1
 
     my_public_ip: 10.11.4.1
     my_public_ip_network: 10.11.4.0
@@ -40,6 +41,7 @@
     my_public_ip_broadcast: 10.11.4.255
     my_public_dhcp_range_begin: 10.11.4.50
     my_public_dhcp_range_end: 10.11.4.255
+    my_wlan0_mac: "e4:5f:01:ed:d5:57"
 
     domain_name: ratzek
 
@@ -100,6 +102,7 @@
         netmask: "{{ my_client_ip_netmask }}"
         network: "{{ my_client_ip_network }}"
         broadcast: "{{ my_client_ip_broadcast }}"
+        gateway: "{{ my_client_ip_gateway }}"
 
     bind_allow_query: ['any']
     bind_recursion: true
@@ -133,6 +136,10 @@
         netmask: 255.255.255.0
         range_begin: "{{ my_public_dhcp_range_begin }}"
         range_end: "{{ my_public_dhcp_range_end }}"
+    dhcp_hosts:
+      - name: ratzek-service
+        ip: "{{ my_public_ip }}"
+        mac: "{{ my_wlan0_mac }}"
 
     hostapd__service_configure_systemd: True
     hostapd__instances:
