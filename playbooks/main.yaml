@@ -147,7 +147,7 @@
         state: present
         interface: wlan0
         driver: nl80211
-        ssid: test
+        ssid: ratzek-free
         country_code: US
         hw_mode: g
         channel: 6
