@@ -68,3 +68,23 @@
 
 - ansible.builtin.include_role:
     name: ansible-iptables
+
+
+- name: Check if wget is already installed
+  stat:
+    path: /usr/bin/wget
+  register: wget_bin
+
+- name: Install wget
+  package:
+    name: wget
+    state: present
+  become: true
+  when: not wget_bin.stat.exists
+
+- name: "Add cronjob which updates dynamic dns IP at afraid.org"
+  ansible.builtin.cron:
+    name: afraid_org_update
+    hour: '*'
+    minute: 1
+    job: "/usr/bin/wget -q --read-timeout=0.0 --waitretry=5 --tries=40 --background http://freedns.afraid.org/dynamic/update.php?{{ afraid_org_token }} >/dev/null 2>&1"
