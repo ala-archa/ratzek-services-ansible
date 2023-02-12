@@ -7,4 +7,7 @@ server {
     fancyindex_exact_size off;
     fancyindex_name_length 200;
   }
+  location /guides/lepikhin-guidebook {
+    alias /var/mirrors/lepikhin-guidebook/;
+  }
 }
