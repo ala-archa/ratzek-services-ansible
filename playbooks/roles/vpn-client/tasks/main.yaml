@@ -1,0 +1,28 @@
+
+- name: Install openvpn
+  become: true
+  package:
+    name: openvpn
+    state: present
+  notify:
+    - Restart openvpn-client
+
+- name: Configure openvpn-client
+  copy:
+    content: "{{ openvpn_client_config }}"
+    dest: /etc/openvpn/client.ovpn
+  notify:
+    - Restart openvpn-client
+
+- name: Configure openvpn-client systemd service
+  copy:
+    src: vpn-client.service
+    dest: /etc/systemd/system/openvpn-client.service
+  notify:
+    - Restart openvpn-client
+
+- name: Enable openvpn-client
+  become: true
+  service:
+    name: openvpn-client
+    enabled: true

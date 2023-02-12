@@ -27,6 +27,9 @@
     - role: weather-station
       tags: weather-station
     - role: ratzek-portal
+    - role: vpn-client
+      tags:
+        - vpn-client
   vars:
     ntp_timezone: Asia/Bishkek
     my_client_ip: 10.11.3.2

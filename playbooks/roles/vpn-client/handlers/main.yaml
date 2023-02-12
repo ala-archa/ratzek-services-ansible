@@ -1,0 +1,6 @@
+
+- name: Restart openvpn-client
+  become: true
+  service:
+    name: openvpn-client
+    state: restarted
