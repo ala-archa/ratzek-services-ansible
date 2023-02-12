@@ -18,6 +18,8 @@
       tags:
         - monitoring
     - role: ansible-role-bind
+      tags:
+        - bind
     - role: access-point
       tags:
         - access-point
