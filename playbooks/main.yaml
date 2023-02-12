@@ -167,9 +167,9 @@
     access_point__ipset_name: clients
     access_point__ipset_range: "{{ my_public_dhcp_range_begin }}-{{ my_public_dhcp_range_end }}"
     access_point__ipset_timeout: 600
-    access_point__traffic_limit: 10485760
+    access_point__traffic_limit: 524288000
     access_point__rate: 10Mbit
-    access_point__shaping_rate: 200kbit
+    access_point__shaping_rate: 400kbit
 
     iptables_config: |
       *filter
