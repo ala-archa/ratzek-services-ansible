@@ -4,3 +4,10 @@
     dest: /etc/nginx/sites-enabled/web.ratzek.conf
   notify:
     - Restart nginx
+
+- name: Install captive portal into nginx
+  template:
+    src: templates/captive-portal.conf.j2
+    dest: /etc/nginx/sites-enabled/captive-portal.conf
+  notify:
+    - Restart nginx

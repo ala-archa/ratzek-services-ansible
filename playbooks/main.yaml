@@ -197,6 +197,10 @@
       *nat
 
       :PREROUTING ACCEPT [0:0]
+
+      -A PREROUTING -i wlan0 -p tcp -d {{ my_public_ip }} --dport 80 -j ACCEPT -m comment --comment "Always accept traffic to myself"
+      -A PREROUTING -i wlan0 -p tcp --dport 80 -j DNAT --to-destination {{ my_public_ip }}:81 -m comment --comment "Captive portal"
+
       :INPUT ACCEPT [0:0]
       :OUTPUT ACCEPT [0:0]
       :POSTROUTING ACCEPT [0:0]
