@@ -28,3 +28,5 @@
       - smartmontools
       - iotop
       - dnsutils
+      - telnet
+      - netcat
