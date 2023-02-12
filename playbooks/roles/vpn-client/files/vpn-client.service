@@ -7,7 +7,7 @@ Conflicts=shutdown.target
 
 [Service]
 Type=simple
-ExecStart=/usr/sbin/openvpn --config /tmp/vpn-ratzek.ovpn
+ExecStart=/usr/sbin/openvpn --config /etc/openvpn/client.ovpn
 
 [Install]
 WantedBy=basic.target
