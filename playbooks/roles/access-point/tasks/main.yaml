@@ -88,3 +88,12 @@
     hour: '*'
     minute: 1
     job: "/usr/bin/wget -q -O /dev/null --read-timeout=0.0 --waitretry=5 --tries=40 'https://freedns.afraid.org/dynamic/update.php?{{ afraid_org_token }}' >/dev/null 2>&1"
+
+- name: Generate resolv.conf
+  copy:
+    content: |
+      nameserver {{ access_point__nameserver }}
+    dest: "/etc/resolv.conf"
+    owner: "root"
+    group: "root"
+    mode: "0644"

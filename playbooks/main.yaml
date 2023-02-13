@@ -29,6 +29,8 @@
     - role: weather-station
       tags: weather-station
     - role: ratzek-portal
+      tags:
+        - ratzek-portal
     - role: vpn-client
       tags:
         - vpn-client
@@ -172,6 +174,7 @@
     access_point__traffic_limit: 524288000
     access_point__rate: 10Mbit
     access_point__shaping_rate: 400kbit
+    access_point__nameserver: "{{ my_public_ip }}"
 
     iptables_config: |
       *filter
