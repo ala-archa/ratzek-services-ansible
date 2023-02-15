@@ -126,11 +126,10 @@
         name_servers:
           - ns
         hosts:
-          - name: '@'
+          - name: www
             ip: "{{ my_public_ip }}"
-            aliases:
-              - www
-              - grafana
+          - name: grafana
+            ip: "{{ my_public_ip }}"
           - name: ns
             ip: "{{ my_public_ip }}"
 
