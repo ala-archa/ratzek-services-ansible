@@ -97,3 +97,8 @@
     owner: "root"
     group: "root"
     mode: "0644"
+
+- name: Uninstall network-manager
+  package:
+    name: "network-manager"
+    state: absent
