@@ -180,8 +180,8 @@
     access_point__http_backend_version: "0.1.2"
     access_point__http_backend_port: 8888
 
-    ratzek_portal__main_domain: www.ratzek
-    ratzek_portal__grafana_domain: grafana.ratzek
+    ratzek_portal__main_domain: "www.{{ domain_name }}"
+    ratzek_portal__grafana_domain: "grafana.{{ domain_name }}"
 
     iptables_config: |
       *filter
