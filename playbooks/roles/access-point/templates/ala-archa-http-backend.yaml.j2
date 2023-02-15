@@ -1,0 +1,8 @@
+log_level: Info
+
+ipset_shaper_name: {{ access_point__ipset_shaper }}
+ipset_acl_name: {{ access_point__ipset_acl }}
+http_listen: 127.0.0.1:{{ access_point__http_backend_port }}
+bytes_unlimited_limit: {{ access_point__traffic_limit }}
+
+blacklisted_macs: []

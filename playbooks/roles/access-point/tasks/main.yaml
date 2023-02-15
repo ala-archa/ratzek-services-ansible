@@ -102,3 +102,40 @@
   package:
     name: "network-manager"
     state: absent
+
+- name: Install ratzek-services-http-backend
+  ansible.builtin.command:
+    cmd: "/usr/bin/wget -O /usr/bin/ratzek-services-http-backend 'https://github.com/ala-archa/ratzek-services-http-backend/releases/download/v{{ access_point__http_backend_version }}/ala-archa-http-backend'"
+    creates: /usr/bin/ratzek-services-http-backend
+  notify:
+    - Restart ratzek-services-http-backend
+
+- name: Change permission on ratzek-services-http-backend
+  file:
+    path: /usr/bin/ratzek-services-http-backend
+    state: file
+    owner: root
+    group: root
+    mode: 0755
+
+- name: Configure ratzek-services-http-backend
+  template:
+    src: templates/ala-archa-http-backend.yaml.j2
+    dest: /etc/ala-archa-http-backend.yaml
+  notify:
+    - Restart ratzek-services-http-backend
+
+- name: Copy systemd unit file for http-backend
+  copy:
+    src: "ratzek-services-http-backend.service"
+    dest: "/etc/systemd/system/ratzek-services-http-backend.service"
+    owner: "root"
+    group: "root"
+    mode: "0644"
+  register: ratzek_http_backend_register_unit
+  notify:
+    - Restart ratzek-services-http-backend
+
+- name: Reload systemd daemon
+  command: "systemctl daemon-reload"
+  when: ratzek_http_backend_register_unit is changed

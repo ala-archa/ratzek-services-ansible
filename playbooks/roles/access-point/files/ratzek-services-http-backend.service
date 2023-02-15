@@ -1,0 +1,15 @@
+# {{ ansible_managed }}
+
+[Unit]
+Description=Ratzek HTTP backend
+Before=network-pre.target
+Conflicts=shutdown.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/ratzek-services-http-backend run
+Restart=on-failure
+RestartSec=5s
+
+[Install]
+WantedBy=basic.target
