@@ -1,7 +1,14 @@
-- name: Install vhost into nginx
+- name: Install main vhost into nginx
   template:
     src: templates/web.ratzek.conf.j2
     dest: /etc/nginx/sites-enabled/web.ratzek.conf
+  notify:
+    - Restart nginx
+
+- name: Install grafana vhost into nginx
+  template:
+    src: templates/grafana.ratzek.conf.j2
+    dest: /etc/nginx/sites-enabled/grafana.ratzek.conf
   notify:
     - Restart nginx
 
@@ -11,3 +18,8 @@
     dest: /etc/nginx/sites-enabled/captive-portal.conf
   notify:
     - Restart nginx
+
+- name: Install ratzek-services-frontend
+  ansible.builtin.command:
+    cmd: "git clone https://github.com/ala-archa/ratzek-services-frontend /var/www/ratzek-portal"
+    creates: /var/www/ratzek-portal

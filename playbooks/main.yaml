@@ -130,6 +130,7 @@
             ip: "{{ my_public_ip }}"
             aliases:
               - www
+              - grafana
           - name: ns
             ip: "{{ my_public_ip }}"
 
@@ -179,6 +180,9 @@
     access_point__nameserver: "{{ my_public_ip }}"
     access_point__http_backend_version: "0.1.2"
     access_point__http_backend_port: 8888
+
+    ratzek_portal__main_domain: www.ratzek
+    ratzek_portal__grafana_domain: grafana.ratzek
 
     iptables_config: |
       *filter
