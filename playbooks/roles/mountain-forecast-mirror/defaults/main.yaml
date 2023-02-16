@@ -1,0 +1,4 @@
+mountain_forecast_mirror__instances: {}
+
+mountain_forecast_mirror__instance_defaults:
+  cron_hour: 02

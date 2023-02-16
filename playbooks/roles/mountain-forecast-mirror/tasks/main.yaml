@@ -1,0 +1,13 @@
+
+- name: Install httrack
+  become: true
+  package:
+    name: httrack
+    state: present
+
+- include_tasks: instance.yaml
+  vars:
+    mf_mirror__instance: "{{ mountain_forecast_mirror__instance_defaults|combine(outer_item.value)|combine({'name': outer_item.key}) }}"
+  with_dict: '{{ mountain_forecast_mirror__instances }}'
+  loop_control:
+    loop_var: outer_item

@@ -26,6 +26,8 @@
     - role: youtube-mirror
     - role: lepikhin-guidebook-mirror
       tags: lepikhin-guidebook
+    - role: mountain-forecast-mirror
+      tags: mountain-forecast-mirror
     - role: weather-station
       tags: weather-station
     - role: ratzek-portal
@@ -222,6 +224,12 @@
       - youtube-pavlenko:
           directory: /var/mirrors/youtube/pavlenko
           url: https://www.youtube.com/@user-zj5ko4dm3h/videos
+          cron_hour: 14
+
+    mountain_forecast_mirror__instances:
+      - putin-peak:
+          directory: /var/mirrors/mountain-forecast/putin-peak
+          url: https://www.mountain-forecast.com/peaks/Vladimir-Putin-Peak/forecasts/3500
           cron_hour: 14
 
     lepikhin_guidebook_mirror_cron_hour: 14

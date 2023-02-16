@@ -1,0 +1,42 @@
+
+- name: Check instance
+  assert:
+    that:
+      - mf_mirror__instance is defined
+    msg: mf_mirror__instance must be defined
+
+- name: Check instance name
+  assert:
+    that:
+      - mf_mirror__instance.name is defined
+    msg: mf_mirror__instance.name must be defined
+
+- name: Check instance directory
+  assert:
+    that:
+      - mf_mirror__instance.directory is defined
+    msg: mf_mirror__instance.directory must be defined
+
+- name: Check instance url
+  assert:
+    that:
+      - mf_mirror__instance.url is defined
+    msg: mf_mirror__instance.url must be defined
+
+- name: Check instance cron_hour
+  assert:
+    that:
+      - mf_mirror__instance.cron_hour is defined
+    msg: mf_mirror__instance.cron_hour must be defined
+
+- name: "Create directory for mountain-forecast mirror '{{ mf_mirror__instance.name }}'"
+  file:
+    path: "{{ mf_mirror__instance.directory }}"
+    state: directory
+
+- name: "Add cronjob for mirror '{{ mf_mirror__instance.name }}'"
+  ansible.builtin.cron:
+    name: "mountain-forecast-mirror {{ mf_mirror__instance.name }}"
+    hour: "{{ mf_mirror__instance.cron_hour }}"
+    minute: 24
+    job: "cd '{{ mf_mirror__instance.directory }}' && httrack --update '{{ mf_mirror__instance.url }}' -* +*mountain-forecast* -r2 >/dev/null 2>&1"
