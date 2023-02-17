@@ -1,0 +1,7 @@
+
+- name: Restart mikrotik-exporter
+  service:
+    name: "mikrotik-exporter"
+    state: "restarted"
+    enabled: True
+  when: mikrotik_exporter_register_unit is changed

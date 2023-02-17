@@ -1,0 +1,11 @@
+[Unit]
+Description=Prometheus exporter for Mikrotik devices
+Before=network-pre.target
+Conflicts=shutdown.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/mikrotik-exporter -config-file /etc/mikrotik-exporter.yaml
+
+[Install]
+WantedBy=basic.target

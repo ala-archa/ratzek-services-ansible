@@ -1,0 +1,23 @@
+
+devices:
+  - name: zvonilka-bridge-client
+    address: 10.11.3.1
+    user: prometheus
+    password: {{ mikrotik_exporter__password }}
+  - name: zvonilka-bridge-server
+    address: 10.11.2.1
+    user: prometheus
+    password: {{ mikrotik_exporter__password }}
+  - name: zvonilka-Mikrotik-LHG
+    address: 10.11.2.1
+    user: prometheus
+    password: {{ mikrotik_exporter__password }}
+
+features:
+  bgp: true
+  dhcp: true
+  dhcpv6: false
+  dhcpl: true
+  routes: true
+  pools: true
+  optics: true

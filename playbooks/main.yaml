@@ -36,6 +36,11 @@
     - role: vpn-client
       tags:
         - vpn-client
+    - role: mikrotik-exporter
+      vars:
+        mikrotik_exporter__version: 1.0.11
+      tags:
+        - mikrotik-exporter
   vars:
     ntp_timezone: Asia/Bishkek
     my_client_ip: 10.11.3.2
@@ -70,6 +75,9 @@
       weather-station:
         - targets:
             - 127.0.0.1:9756
+      mikrotik-exporter:
+        - targets:
+            - 127.0.0.1:9436
     prometheus_scrape_configs:
       - job_name: node
         file_sd_configs:
@@ -79,6 +87,10 @@
         file_sd_configs:
           - files:
               - "{{ prometheus_config_dir }}/file_sd/weather-station.yml"
+      - job_name: mikrotik-exporter
+        file_sd_configs:
+          - files:
+              - "{{ prometheus_config_dir }}/file_sd/mikrotik-exporter.yml"
 
     grafana_address: 127.0.0.1
     grafana_port: 3000

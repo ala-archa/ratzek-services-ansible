@@ -1,0 +1,48 @@
+- name: Check if wget is already installed
+  stat:
+    path: /usr/bin/wget
+  register: wget_bin
+
+- name: Install wget
+  package:
+    name: wget
+    state: present
+  become: true
+  when: not wget_bin.stat.exists
+
+- name: Install mikrotik-exporter
+  ansible.builtin.command:
+    cmd: "/usr/bin/wget -O /usr/bin/mikrotik-exporter 'https://github.com/nshttpd/mikrotik-exporter/releases/download/{{ mikrotik_exporter__version }}/mikrotik-exporter_linux_arm'"
+    creates: /usr/bin/mikrotik-exporter
+  notify:
+    - Restart mikrotik-exporter
+
+- name: Change permission
+  file:
+    path: /usr/bin/mikrotik-exporter
+    state: file
+    owner: root
+    group: root
+    mode: 0755
+
+- name: Copy systemd unit file
+  copy:
+    src: "mikrotik-exporter.service"
+    dest: "/etc/systemd/system/mikrotik-exporter.service"
+    owner: "root"
+    group: "root"
+    mode: "0644"
+  register: mikrotik_exporter_register_unit
+  notify:
+    - Restart mikrotik-exporter
+
+- name: Configure exporter
+  template:
+    src: templates/mikrotik-exporter.yaml.j2
+    dest: /etc/mikrotik-exporter.yaml
+  notify:
+    - Restart mikrotik-exporter
+
+- name: Reload systemd daemon
+  command: "systemctl daemon-reload"
+  when: mikrotik_exporter_register_unit is changed
