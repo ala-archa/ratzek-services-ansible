@@ -1,5 +1,5 @@
 [Unit]
-Description=Prometheus exported for I2C BME280 sensor
+Description=Prometheus exporter for I2C BME280 sensor
 Before=network-pre.target
 Conflicts=shutdown.target
 
