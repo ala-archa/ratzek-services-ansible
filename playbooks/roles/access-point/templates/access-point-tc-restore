@@ -7,7 +7,7 @@ tc class add dev eth0 parent 1:1 classid 1:2 htb rate {{ access_point__shaping_r
 tc filter add dev eth0 parent 1:0 protocol ip prio 0 handle 333 fw flowid 1:2
 
 # Limit incoming traffic
-tc qdisc add dev wlan0 root handle 1:0 htb default 4
-tc class add dev wlan0 parent 1:0 classid 1:1 htb rate {{ access_point__rate }}
-tc class add dev wlan0 parent 1:1 classid 1:2 htb rate {{ access_point__shaping_rate }}
-tc filter add dev wlan0 parent 1:0 protocol ip prio 0 handle 333 fw flowid 1:2
+tc qdisc add dev wlan1 root handle 1:0 htb default 4
+tc class add dev wlan1 parent 1:0 classid 1:1 htb rate {{ access_point__rate }}
+tc class add dev wlan1 parent 1:1 classid 1:2 htb rate {{ access_point__shaping_rate }}
+tc filter add dev wlan1 parent 1:0 protocol ip prio 0 handle 333 fw flowid 1:2

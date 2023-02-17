@@ -55,7 +55,7 @@
     my_public_ip_broadcast: 10.11.4.255
     my_public_dhcp_range_begin: 10.11.4.50
     my_public_dhcp_range_end: 10.11.4.255
-    my_wlan0_mac: "e4:5f:01:ed:d5:57"
+    my_wlan1_mac: "30:de:4b:03:a9:89"
 
     domain_name: ratzek
 
@@ -109,7 +109,7 @@
         org_name: Ratzek public
 
     interfaces_ether_interfaces:
-      - device: wlan0
+      - device: wlan1
         allowclass: allow-hotplug
         bootproto: static
         address: "{{ my_public_ip }}"
@@ -153,20 +153,20 @@
     dhcp_global_server_name: "{{ domain_name }}"
     dhcp_subnets:
       - ip: "{{ my_public_ip_network }}"
-        interface: wlan0
+        interface: wlan1
         netmask: 255.255.255.0
         range_begin: "{{ my_public_dhcp_range_begin }}"
         range_end: "{{ my_public_dhcp_range_end }}"
     dhcp_hosts:
       - name: ratzek-service
         ip: "{{ my_public_ip }}"
-        mac: "{{ my_wlan0_mac }}"
+        mac: "{{ my_wlan1_mac }}"
 
     hostapd__service_configure_systemd: True
     hostapd__instances:
       client_ap:
         state: present
-        interface: wlan0
+        interface: wlan1
         driver: nl80211
         ssid: ratzek-free
         country_code: US
@@ -204,16 +204,16 @@
       :FORWARD DROP [0:0]
       :OUTPUT ACCEPT [0:0]
 
-      -A FORWARD -i wlan0 -o eth0 -m set ! --match-set {{ access_point__ipset_acl }} src -j DROP -m comment --comment "No access to internet for clients not in ACL"
+      -A FORWARD -i wlan1 -o eth0 -m set ! --match-set {{ access_point__ipset_acl }} src -j DROP -m comment --comment "No access to internet for clients not in ACL"
 
-      -A FORWARD -i wlan0 -j SET --add-set {{ access_point__ipset_shaper }} src -m comment --comment "Register new clients with ipset table to count traffic"
-      -A FORWARD -o wlan0 -j SET --add-set {{ access_point__ipset_shaper }} dst -m comment --comment "Register new clients with ipset table to count traffic"
+      -A FORWARD -i wlan1 -j SET --add-set {{ access_point__ipset_shaper }} src -m comment --comment "Register new clients with ipset table to count traffic"
+      -A FORWARD -o wlan1 -j SET --add-set {{ access_point__ipset_shaper }} dst -m comment --comment "Register new clients with ipset table to count traffic"
 
-      -A FORWARD -i wlan0 -o eth0 -m set --match-set {{ access_point__ipset_shaper }} src --bytes-gt {{ access_point__traffic_limit }} -j MARK --set-mark 333 -m comment --comment "Rate limit clients which reached limit"
-      -A FORWARD -i eth0 -o wlan0 -m set --match-set {{ access_point__ipset_shaper }} dst --bytes-gt {{ access_point__traffic_limit }} -j MARK --set-mark 333 -m comment --comment "Rate limit clients which reached limit"
+      -A FORWARD -i wlan1 -o eth0 -m set --match-set {{ access_point__ipset_shaper }} src --bytes-gt {{ access_point__traffic_limit }} -j MARK --set-mark 333 -m comment --comment "Rate limit clients which reached limit"
+      -A FORWARD -i eth0 -o wlan1 -m set --match-set {{ access_point__ipset_shaper }} dst --bytes-gt {{ access_point__traffic_limit }} -j MARK --set-mark 333 -m comment --comment "Rate limit clients which reached limit"
 
-      -A FORWARD -i wlan0 -o eth0 -m set --match-set {{ access_point__ipset_shaper }} src -j ACCEPT -m comment --comment "Count and accept clients traffic"
-      -A FORWARD -o wlan0 -m state --state RELATED,ESTABLISHED -m set --match-set {{ access_point__ipset_shaper }} dst -j ACCEPT -m comment --comment "Count and accept clients traffic"
+      -A FORWARD -i wlan1 -o eth0 -m set --match-set {{ access_point__ipset_shaper }} src -j ACCEPT -m comment --comment "Count and accept clients traffic"
+      -A FORWARD -o wlan1 -m state --state RELATED,ESTABLISHED -m set --match-set {{ access_point__ipset_shaper }} dst -j ACCEPT -m comment --comment "Count and accept clients traffic"
 
       COMMIT
 
@@ -221,8 +221,8 @@
 
       :PREROUTING ACCEPT [0:0]
 
-      -A PREROUTING -i wlan0 -p tcp -d {{ my_public_ip }} --dport 80 -j ACCEPT -m comment --comment "Always accept traffic to myself"
-      -A PREROUTING -i wlan0 -p tcp --dport 80 -m set ! --match-set {{ access_point__ipset_acl }} src -j DNAT --to-destination {{ my_public_ip }}:81 -m comment --comment "Captive portal"
+      -A PREROUTING -i wlan1 -p tcp -d {{ my_public_ip }} --dport 80 -j ACCEPT -m comment --comment "Always accept traffic to myself"
+      -A PREROUTING -i wlan1 -p tcp --dport 80 -m set ! --match-set {{ access_point__ipset_acl }} src -j DNAT --to-destination {{ my_public_ip }}:81 -m comment --comment "Captive portal"
 
       :INPUT ACCEPT [0:0]
       :OUTPUT ACCEPT [0:0]
