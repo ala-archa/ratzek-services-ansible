@@ -5,6 +5,14 @@
   notify:
     - Restart nginx
 
+- name: Create /var/www/ratzek-portal/library directory
+  file:
+    path: "/var/www/ratzek-portal/library"
+    state: "directory"
+    owner: "root"
+    group: "root"
+    mode: "0755"
+
 - name: Install grafana vhost into nginx
   template:
     src: templates/grafana.ratzek.conf.j2

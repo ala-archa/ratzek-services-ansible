@@ -1,14 +1,15 @@
 server {
   listen *:80;
   server_name {{ ratzek_portal__main_domain }};
-
   root /no_entry/;
+
   location /guides/pavlenko {
     alias /var/mirrors/youtube/pavlenko/;
     fancyindex on;
     fancyindex_exact_size off;
     fancyindex_name_length 200;
   }
+
   location /guides/lepikhin-guidebook {
     alias /var/mirrors/lepikhin-guidebook/;
   }
@@ -16,6 +17,13 @@ server {
   location /forecasts/mountain-forecast/ {
     alias /var/mirrors/mountain-forecast/putin-peak/;
     index index.html;
+  }
+
+  location /library {
+    alias /var/www/ratzek-portal/library/;
+    fancyindex on;
+    fancyindex_exact_size off;
+    fancyindex_name_length 200;
   }
 
   location /api/ {
