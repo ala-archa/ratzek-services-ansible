@@ -26,3 +26,10 @@
   service:
     name: openvpn-client
     enabled: true
+
+- name: Monitor VPN connection via cron
+  ansible.builtin.cron:
+    name: Monitor VPN connection
+    hour: "*"
+    minute: "*/5"
+    job: "ping -w1 -c1 10.8.0.1 >/dev/null 2>&1 || systemctl restart openvpn-client.service"
