@@ -12,7 +12,7 @@
     path: /var/log
     src: tmpfs
     fstype: tmpfs
-    opts: auto,size=64m
+    opts: auto,size=64m,mode=0755
     state: mounted
   notify:
     - Restart rsyslog
@@ -22,7 +22,7 @@
     path: /var/log/nginx
     src: tmpfs
     fstype: tmpfs
-    opts: auto,size=64m
+    opts: auto,size=64m,mode=0755
     state: mounted
   notify:
     - Restart nginx
