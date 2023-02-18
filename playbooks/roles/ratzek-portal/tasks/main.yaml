@@ -5,9 +5,9 @@
   notify:
     - Restart nginx
 
-- name: Create /var/www/ratzek-portal/library directory
+- name: Create /var/www/library directory
   file:
-    path: "/var/www/ratzek-portal/library"
+    path: "{{ ratzek_portal__library_path }}"
     state: "directory"
     owner: "root"
     group: "root"
@@ -26,6 +26,9 @@
     dest: /etc/nginx/sites-enabled/captive-portal.conf
   notify:
     - Restart nginx
+
+- ansible.builtin.include_role:
+    name: ansible-role-minidlna
 
 - name: Install ratzek-services-frontend
   ansible.builtin.command:

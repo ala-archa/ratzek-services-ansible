@@ -29,3 +29,6 @@
 [submodule "playbooks/roles/ansible-role-interfaces"]
 	path = playbooks/roles/ansible-role-interfaces
 	url = https://github.com/michaelrigart/ansible-role-interfaces
+[submodule "playbooks/roles/ansible-role-minidlna"]
+	path = playbooks/roles/ansible-role-minidlna
+	url = https://github.com/robgmills/ansible-role-minidlna

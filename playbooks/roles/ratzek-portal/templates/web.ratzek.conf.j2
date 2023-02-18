@@ -20,7 +20,7 @@ server {
   }
 
   location /library {
-    alias /var/www/ratzek-portal/library/;
+    alias {{ ratzek_portal__library_path }}/;
     fancyindex on;
     fancyindex_exact_size off;
     fancyindex_name_length 200;
