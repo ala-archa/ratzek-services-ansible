@@ -39,4 +39,4 @@
     name: "mountain-forecast-mirror {{ mf_mirror__instance.name }}"
     hour: "{{ mf_mirror__instance.cron_hour }}"
     minute: 24
-    job: "cd '{{ mf_mirror__instance.directory }}' && httrack --update '{{ mf_mirror__instance.url }}' -* +*mountain-forecast* -r2 >/dev/null 2>&1"
+    job: "cd '{{ mf_mirror__instance.directory }}' && httrack -R5 --update '{{ mf_mirror__instance.url }}' -* +*mountain-forecast* -r2 >/dev/null 2>&1"
