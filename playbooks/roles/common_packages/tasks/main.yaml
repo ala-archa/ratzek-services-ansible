@@ -31,3 +31,4 @@
       - telnet
       - netcat
       - lshw
+      - sudo
