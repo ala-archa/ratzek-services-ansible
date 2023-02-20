@@ -41,6 +41,9 @@
         mikrotik_exporter__version: 1.0.11
       tags:
         - mikrotik-exporter
+    - role: lemmy
+      tags:
+        - lemmy
   vars:
     ntp_timezone: Asia/Bishkek
     my_client_ip: 10.11.3.2
@@ -145,6 +148,8 @@
           - name: www
             ip: "{{ my_public_ip }}"
           - name: grafana
+            ip: "{{ my_public_ip }}"
+          - name: forum
             ip: "{{ my_public_ip }}"
           - name: ns
             ip: "{{ my_public_ip }}"
@@ -257,3 +262,8 @@
 
     lepikhin_guidebook_mirror_cron_hour: 14
     lepikhin_guidebook_mirror_directory: /var/mirrors/lepikhin-guidebook
+
+    lemmy_site_name: Ratzek talks
+    lemmy__domain: "forum.{{ domain_name }}"
+    lemmy_listen_port: 8536
+    lemmy_ui_listen_port: 1235
