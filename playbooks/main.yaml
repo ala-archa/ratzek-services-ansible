@@ -184,13 +184,17 @@
         ieee80211d: 1
 
     access_point__ipset_shaper: shaper
-    access_point__ipset_shaper_timeout: 600
-    access_point__ipset_acl: acl
-    access_point__ipset_acl_timeout: 1200
-    access_point__ipset_range: "{{ my_public_dhcp_range_begin }}-{{ my_public_dhcp_range_end }}"
+    # Раз в 3 часа сбрасывать счетчик рейтлимита
+    access_point__ipset_shaper_timeout: 10800
+    # Безлимит до 500MB, далее начинаем тормозить клиента
     access_point__traffic_limit: 524288000
-    access_point__rate: 10Mbit
+     # Тормозим клиента до 400kbps
     access_point__shaping_rate: 400kbit
+    access_point__ipset_acl: acl
+    # Раз в 12 часов просим клиента заново пройти captive portal
+    access_point__ipset_acl_timeout: 43200
+    access_point__ipset_range: "{{ my_public_dhcp_range_begin }}-{{ my_public_dhcp_range_end }}"
+    access_point__rate: 10Mbit
     access_point__nameserver: "{{ my_public_ip }}"
     access_point__http_backend_version: "0.1.4"
     access_point__http_backend_port: 8888
