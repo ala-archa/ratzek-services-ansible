@@ -38,9 +38,6 @@
         mikrotik_exporter__version: 1.0.11
       tags:
         - mikrotik-exporter
-    - role: lemmy
-      tags:
-        - lemmy
   vars:
     ntp_timezone: Asia/Bishkek
     my_client_ip: 10.11.3.2
