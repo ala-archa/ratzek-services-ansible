@@ -252,7 +252,7 @@
       - putin-peak:
           directory: /var/mirrors/mountain-forecast/putin-peak
           url: https://www.mountain-forecast.com/peaks/Vladimir-Putin-Peak/forecasts/3500
-          cron_hour: 14
+          cron_hour: 9,14,18
 
     lepikhin_guidebook_mirror_cron_hour: 14
     lepikhin_guidebook_mirror_directory: /var/mirrors/lepikhin-guidebook
