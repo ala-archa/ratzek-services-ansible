@@ -1,0 +1,61 @@
+
+* Подготовка
+
+Поставить Raspbian arm64 (на 32-битной не взлетит Lemmy)
+
+* Что пока что ставится вручную
+
+** Драйвер для внешнего USB wi-fi
+
+#+BEGIN_SRC bash
+apt-get install -y bc git dkms build-essential raspberrypi-kernel-headers
+cd /usr/src
+git clone -b v5.8.7 https://github.com/fastoe/RTL8812BU_for_Raspbian RTL8812BU-v5.8.7
+cd RTL8812BU-v5.8.7
+git checkout v5.8.7
+#+END_SRC
+
+#+BEGIN_SRC diff
+diff --git a/core/rtw_debug.c b/core/rtw_debug.c
+index 8bbbfdc..9d139d1 100644
+--- a/core/rtw_debug.c
++++ b/core/rtw_debug.c
+@@ -42,7 +42,6 @@ const char *rtw_log_level_str[] = {
+ void dump_drv_version(void *sel)
+ {
+        RTW_PRINT_SEL(sel, "%s %s\n", DRV_NAME, DRIVERVERSION);
+-       RTW_PRINT_SEL(sel, "build time: %s %s\n", __DATE__, __TIME__);
+ }
+ 
+ void dump_drv_cfg(void *sel)
+#+END_SRC
+
+#+BEGIN_SRC bash
+dkms add .
+dkms install -j 4 rtl88x2bu/5.8.7.1
+#+END_SRC
+
+** bsbmp-exporter
+
+#+BEGIN_SRC bash
+apt-get install -y golang
+git clone https://github.com/david-igou/bsbmp-exporter
+cd bsbmp-exporter
+go build
+cp bsbmp-exporter /usr/local/bin/
+#+END_SRC
+
+
+* Установка ансиблом
+
+В целом инсталлятор пока работает не идеально и какие-то шаги приходится подпинывать вручную. В первую очередь, ввиду смены IP-адресов на
+интерфейсах.
+
+* Переустановка
+
+Если переустанавливаем lemmy, важно снести все текущие контейнеры:
+
+#+BEGIN_SRC bash
+docker ps
+docker rm -f ...
+#+END_SRC
