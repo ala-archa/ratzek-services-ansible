@@ -69,7 +69,6 @@
 - ansible.builtin.include_role:
     name: ansible-iptables
 
-
 - name: Check if wget is already installed
   stat:
     path: /usr/bin/wget
