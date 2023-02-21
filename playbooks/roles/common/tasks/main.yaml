@@ -9,3 +9,9 @@
     name: ansible-node-exporter
 - ansible.builtin.include_role:
     name: ansible-role-rsyslog
+
+- name: Enable sshd
+  become: true
+  service:
+    name: ssh
+    enabled: true
