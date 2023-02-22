@@ -59,3 +59,13 @@ cp bsbmp-exporter /usr/local/bin/
 docker ps
 docker rm -f ...
 #+END_SRC
+
+* Известные проблемы
+
+После физического переподсоединения внешней wi-fi карточки, необходимо выполнить:
+
+#+BEGIN_SRC bash
+systemctl restart hostapd@client_ap.service
+#+END_SRC
+
+Как мониторить изнутри пока не совсем ясно.
