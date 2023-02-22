@@ -66,6 +66,7 @@ docker rm -f ...
 
 #+BEGIN_SRC bash
 systemctl restart hostapd@client_ap.service
+systemctl restart isc-dhcp-server.service
 #+END_SRC
 
 Как мониторить изнутри пока не совсем ясно.
