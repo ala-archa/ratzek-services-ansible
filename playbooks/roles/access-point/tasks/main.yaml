@@ -22,7 +22,13 @@
     name: ipset
     state: present
 
+- name: Check if ipset already installed
+  stat:
+    path: /etc/iptables/ipsets
+  register: ipset
+
 - name: Install ipset-persistent
+  when: not ipset.stat.exists
   become: true
   package:
     name: ipset-persistent
@@ -31,6 +37,7 @@
     - Restart netfilter-persistent
 
 - name: Configure ipset
+  when: not ipset.stat.exists
   template:
     src: templates/ipsets.j2
     dest: /etc/iptables/ipsets
