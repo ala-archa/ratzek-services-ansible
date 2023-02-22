@@ -145,3 +145,9 @@
 - name: Reload systemd daemon
   command: "systemctl daemon-reload"
   when: ratzek_http_backend_register_unit is changed
+
+- name: Disable client DHCP daemon
+  service:
+    name: "dhcpcd"
+    state: stopped
+    enabled: false
