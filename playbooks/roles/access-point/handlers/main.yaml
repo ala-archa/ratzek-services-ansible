@@ -4,9 +4,11 @@
   service:
     name: netfilter-persistent
     state: restarted
+    enabled: true
 
 - name: Restart ratzek-services-http-backend
   become: true
   service:
     name: ratzek-services-http-backend
     state: restarted
+    enabled: true
