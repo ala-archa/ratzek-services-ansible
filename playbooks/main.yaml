@@ -177,8 +177,8 @@
         macaddr_acl: 0
         auth_algs: 1
         ignore_broadcast_ssid: 0
-        wpa: 2
-        wpa_passphrase: "{{ public_wpa_password }}"
+#        wpa: 2
+#        wpa_passphrase: "{{ public_wpa_password }}"
         wpa_key_mgmt: WPA-PSK
         logger_syslog_level: 0
         ieee80211d: 1
