@@ -194,9 +194,14 @@
     # Раз в 12 часов просим клиента заново пройти captive portal
     access_point__ipset_acl_timeout: 43200
     access_point__ipset_range: "{{ my_public_dhcp_range_begin }}-{{ my_public_dhcp_range_end }}"
+
+    access_point__ipset_no_shape: no_shape
+    # Клиентов из вайтлиста помним столько же, сколько разрешен доступ в сеть
+    access_point__ipset_no_shape_timeout: "{{ access_point__ipset_acl_timeout }}"
+
     access_point__rate: 10Mbit
     access_point__nameserver: "{{ my_public_ip }}"
-    access_point__http_backend_version: "0.1.4"
+    access_point__http_backend_version: "0.1.5"
     access_point__http_backend_port: 8888
 
     ratzek_portal__main_domain: "www.{{ domain_name }}"
@@ -222,6 +227,9 @@
 
       -A FORWARD -i wlan1 -j SET --add-set {{ access_point__ipset_shaper }} src -m comment --comment "Register new clients with ipset table to count traffic"
       -A FORWARD -o wlan1 -j SET --add-set {{ access_point__ipset_shaper }} dst -m comment --comment "Register new clients with ipset table to count traffic"
+
+      -A FORWARD -i wlan1 -o eth0 -m set --match-set {{ access_point__ipset_no_shape }} src -j ACCEPT -m comment --comment "Count and accept whitelisted clients traffic"
+      -A FORWARD -o wlan1 -m state --state RELATED,ESTABLISHED -m set --match-set {{ access_point__ipset_no_shape }} dst -j ACCEPT -m comment --comment "Count and accept whitelisted clients traffic"
 
       -A FORWARD -i wlan1 -o eth0 -m set --match-set {{ access_point__ipset_shaper }} src --bytes-gt {{ access_point__traffic_limit }} -j MARK --set-mark 333 -m comment --comment "Rate limit clients which reached limit"
       -A FORWARD -i eth0 -o wlan1 -m set --match-set {{ access_point__ipset_shaper }} dst --bytes-gt {{ access_point__traffic_limit }} -j MARK --set-mark 333 -m comment --comment "Rate limit clients which reached limit"

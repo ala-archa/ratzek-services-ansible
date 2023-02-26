@@ -2,9 +2,14 @@ log_level: Info
 
 ipset_shaper_name: {{ access_point__ipset_shaper }}
 ipset_acl_name: {{ access_point__ipset_acl }}
+ipset_no_shape_name: {{ access_point__ipset_no_shape }}
 http_listen: 127.0.0.1:{{ access_point__http_backend_port }}
 bytes_unlimited_limit: {{ access_point__traffic_limit }}
 
 wide_network_ip: 8.8.8.8
 
-blacklisted_macs: []
+dhcpd_leases: /var/lib/dhcp/dhcpd.leases
+
+blacklisted_macs: {{ access_point__blacklisted_macs }}
+
+no_shaping_macs: {{ access_point__no_shaping_macs }}

@@ -1,2 +1,3 @@
 create {{ access_point__ipset_shaper }} bitmap:ip range {{ access_point__ipset_range }} timeout {{ access_point__ipset_shaper_timeout }} counters
+create {{ access_point__ipset_no_shape }} bitmap:ip range {{ access_point__ipset_range }} timeout {{ access_point__ipset_no_shape_timeout }} counters
 create {{ access_point__ipset_acl }} bitmap:ip range {{ access_point__ipset_range }} timeout {{ access_point__ipset_acl_timeout }}
