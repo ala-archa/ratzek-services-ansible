@@ -77,6 +77,9 @@
       mikrotik-exporter:
         - targets:
             - 127.0.0.1:9436
+      ratzek-ap-exporter:
+        - targets:
+            - 127.0.0.1:8888
     prometheus_scrape_configs:
       - job_name: node
         file_sd_configs:
@@ -90,6 +93,15 @@
         file_sd_configs:
           - files:
               - "{{ prometheus_config_dir }}/file_sd/mikrotik-exporter.yml"
+      - job_name: ratzek-ap-exporter
+        file_sd_configs:
+          - files:
+              - "{{ prometheus_config_dir }}/file_sd/ratzek-ap-exporter.yml"
+    prometheus_storage_retention: 1100d
+    prometheus_global:
+      scrape_interval: 60s
+      scrape_timeout: 15s
+      evaluation_interval: 15s
 
     grafana_address: 127.0.0.1
     grafana_port: 3000
@@ -201,7 +213,7 @@
 
     access_point__rate: 10Mbit
     access_point__nameserver: "{{ my_public_ip }}"
-    access_point__http_backend_version: "0.1.6"
+    access_point__http_backend_version: "0.1.8"
     access_point__http_backend_port: 8888
 
     ratzek_portal__main_domain: "www.{{ domain_name }}"
