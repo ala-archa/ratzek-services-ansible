@@ -198,8 +198,8 @@
     access_point__ipset_shaper: shaper
     # Раз в 3 часа сбрасывать счетчик рейтлимита
     access_point__ipset_shaper_timeout: 10800
-    # Безлимит до 500MB, далее начинаем тормозить клиента
-    access_point__traffic_limit: 524288000
+    # Безлимит до 1.5GB, далее начинаем тормозить клиента
+    access_point__traffic_limit: 1610612736
      # Тормозим клиента до 400kbps
     access_point__shaping_rate: 400kbit
     access_point__ipset_acl: acl
