@@ -213,7 +213,7 @@
 
     access_point__rate: 10Mbit
     access_point__nameserver: "{{ my_public_ip }}"
-    access_point__http_backend_version: "0.1.9"
+    access_point__http_backend_version: "0.1.10"
     access_point__http_backend_port: 8888
 
     ratzek_portal__main_domain: "www.{{ domain_name }}"
