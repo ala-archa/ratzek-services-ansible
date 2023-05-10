@@ -30,9 +30,6 @@
 - ansible.builtin.include_role:
     name: ansible-role-minidlna
 
-- ansible.builtin.include_role:
-    name: lemmy
-
 - name: Install ratzek-services-frontend
   ansible.builtin.command:
     cmd: "git clone https://github.com/ala-archa/ratzek-services-frontend /var/www/ratzek-portal"

@@ -280,8 +280,3 @@
 
     lepikhin_guidebook_mirror_cron_hour: 14
     lepikhin_guidebook_mirror_directory: /var/mirrors/lepikhin-guidebook
-
-    lemmy_site_name: Ratzek talks
-    lemmy__domain: "forum.{{ domain_name }}"
-    lemmy_listen_port: 8536
-    lemmy_ui_listen_port: 1235
