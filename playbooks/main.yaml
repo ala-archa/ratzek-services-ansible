@@ -200,11 +200,11 @@
     access_point__ipset_shaper_timeout: 10800
     # Безлимит до 500MB, далее начинаем тормозить клиента
     access_point__traffic_limit: 524288000
-     # Тормозим клиента до 200kbps
-    access_point__shaping_rate: 200kbit
+     # Тормозим клиента до 100kbps
+    access_point__shaping_rate: 100kbit
     access_point__ipset_acl: acl
-    # Раз в 12 часов просим клиента заново пройти captive portal
-    access_point__ipset_acl_timeout: 43200
+    # Раз в 3 часа просим клиента заново пройти captive portal
+    access_point__ipset_acl_timeout: 10800
     access_point__ipset_range: "{{ my_public_dhcp_range_begin }}-{{ my_public_dhcp_range_end }}"
 
     access_point__ipset_no_shape: no_shape
