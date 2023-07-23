@@ -34,3 +34,13 @@ ipset add acl 10.11.XX.XX timeout 0
 #+END_SRC
 
 ACL сохраняется на диск по крону раз в минуту.
+
+* Дебаг метеодатчика
+
+#+BEGIN_SRC bash
+i2cdetect -y 1
+
+curl -s http://127.0.0.1:9756/metrics | grep bsbmp
+#+END_SRC
+
+Также см. схему распайки входящего езернета в bsbmp-ether-rpi.jpg
