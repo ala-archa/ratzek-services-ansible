@@ -251,6 +251,8 @@
     ratzek_portal__main_domain: "www.{{ domain_name }}"
     ratzek_portal__grafana_domain: "grafana.{{ domain_name }}"
     ratzek_portal__library_path: /var/www/library
+    ratzek_portal__webcam_archive_path: /var/www/webcam_archive
+    ratzek_portal__webcam_daily_archive_path: /var/www/webcam_daily_archive
 
     minidlna:
       user: minidlna

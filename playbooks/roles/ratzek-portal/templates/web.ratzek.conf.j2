@@ -26,6 +26,13 @@ server {
     fancyindex_name_length 200;
   }
 
+  location /webcam-archive/ {
+    alias {{ ratzek_portal__webcam_archive_path }}/;
+    fancyindex on;
+    fancyindex_exact_size off;
+    fancyindex_name_length 200;
+  }
+
   location /api/ {
     proxy_pass http://127.0.0.1:{{ access_point__http_backend_port }}/api/;
     proxy_set_header Host $host;
