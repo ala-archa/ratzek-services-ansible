@@ -52,7 +52,16 @@
     my_public_ip_broadcast: 10.11.4.255
     my_public_dhcp_range_begin: 10.11.4.50
     my_public_dhcp_range_end: 10.11.4.255
+
+    my_public_ether_ip: 10.11.5.1
+    my_public_ether_ip_network: 10.11.5.0
+    my_public_ether_ip_netmask: 255.255.255.0
+    my_public_ether_ip_broadcast: 10.11.5.255
+    my_public_ether_dhcp_range_begin: 10.11.5.50
+    my_public_ether_dhcp_range_end: 10.11.5.255
+
     my_wlan1_mac: "30:de:4b:03:a9:89"
+    my_eth0_mac: "e4:5f:01:ed:d5:56"
 
     domain_name: ratzek
 
@@ -120,13 +129,6 @@
         org_name: Ratzek public
 
     interfaces_ether_interfaces:
-      - device: wlan1
-        allowclass: allow-hotplug
-        bootproto: static
-        address: "{{ my_public_ip }}"
-        netmask: "{{ my_public_ip_netmask }}"
-        network: "{{ my_public_ip_network }}"
-        broadcast: "{{ my_public_ip_broadcast }}"
       - device: eth0
         allowclass: allow-hotplug
         bootproto: static
@@ -135,6 +137,28 @@
         network: "{{ my_client_ip_network }}"
         broadcast: "{{ my_client_ip_broadcast }}"
         gateway: "{{ my_client_ip_gateway }}"
+
+      # Выглядит так, что через ansible-role-interfaces нельзя задавать алиасы.
+      # Ручками был добавлен файл /etc/network/interfaces.d/ifcfg-eth0-custom-public с содержимым:
+      #
+      # iface eth0 inet static
+      # address 10.11.5.1/24
+      #
+      # - device: eth0
+      #   allowclass: allow-hotplug
+      #   bootproto: static
+      #   address: "{{ my_public_ether_ip }}/24"
+      #   netmask: "{{ my_public_ether_ip_netmask }}"
+      #   network: "{{ my_public_ether_ip_network }}"
+      #   broadcast: "{{ my_public_ether_ip_broadcast }}"
+      #   gateway: "{{ my_client_ip_gateway }}"
+      - device: wlan1
+        allowclass: allow-hotplug
+        bootproto: static
+        address: "{{ my_public_ip }}"
+        netmask: "{{ my_public_ip_netmask }}"
+        network: "{{ my_public_ip_network }}"
+        broadcast: "{{ my_public_ip_broadcast }}"
 
     bind_allow_query: ['any']
     bind_recursion: true
@@ -170,10 +194,18 @@
         netmask: 255.255.255.0
         range_begin: "{{ my_public_dhcp_range_begin }}"
         range_end: "{{ my_public_dhcp_range_end }}"
+      - ip: "{{ my_public_ether_ip_network }}"
+        interface: eth0
+        netmask: 255.255.255.0
+        range_begin: "{{ my_public_ether_dhcp_range_begin }}"
+        range_end: "{{ my_public_ether_dhcp_range_end }}"
     dhcp_hosts:
       - name: ratzek-service
         ip: "{{ my_public_ip }}"
         mac: "{{ my_wlan1_mac }}"
+      - name: ratzek-service-ether
+        ip: "{{ my_public_ether_ip }}"
+        mac: "{{ my_eth0_mac }}"
 
     hostapd__service_configure_systemd: True
     hostapd__instances:
@@ -235,7 +267,7 @@
       :FORWARD DROP [0:0]
       :OUTPUT ACCEPT [0:0]
 
-      -A FORWARD -i wlan1 -o eth0 -m set ! --match-set {{ access_point__ipset_acl }} src -j DROP -m comment --comment "No access to internet for clients not in ACL"
+      -A FORWARD -s 10.11.4.0/24 -m set ! --match-set {{ access_point__ipset_acl }} src -j DROP -m comment --comment "No access to internet for clients not in ACL"
 
       -A FORWARD -i wlan1 -j SET --add-set {{ access_point__ipset_shaper }} src -m comment --comment "Register new clients with ipset table to count traffic"
       -A FORWARD -o wlan1 -j SET --add-set {{ access_point__ipset_shaper }} dst -m comment --comment "Register new clients with ipset table to count traffic"
@@ -249,6 +281,20 @@
       -A FORWARD -i wlan1 -o eth0 -m set --match-set {{ access_point__ipset_shaper }} src -j ACCEPT -m comment --comment "Count and accept clients traffic"
       -A FORWARD -o wlan1 -m state --state RELATED,ESTABLISHED -m set --match-set {{ access_point__ipset_shaper }} dst -j ACCEPT -m comment --comment "Count and accept clients traffic"
 
+
+      -A FORWARD -s 10.11.5.0/24 -m set ! --match-set {{ access_point__ipset_acl }} src -j DROP -m comment --comment "No access to internet for clients not in ACL"
+
+      -A FORWARD -i eth0 -j SET --add-set {{ access_point__ipset_shaper }} src -m comment --comment "Register new clients with ipset table to count traffic"
+      -A FORWARD -o eth0 -j SET --add-set {{ access_point__ipset_shaper }} dst -m comment --comment "Register new clients with ipset table to count traffic"
+
+      -A FORWARD -i eth0 -o eth0 -m set --match-set {{ access_point__ipset_no_shape }} src -j ACCEPT -m comment --comment "Count and accept whitelisted clients traffic"
+      -A FORWARD -o eth0 -m state --state RELATED,ESTABLISHED -m set --match-set {{ access_point__ipset_no_shape }} dst -j ACCEPT -m comment --comment "Count and accept whitelisted clients traffic"
+
+      -A FORWARD -i eth0 -o eth0 -m set --match-set {{ access_point__ipset_shaper }} src --bytes-gt {{ access_point__traffic_limit }} -j MARK --set-mark 333 -m comment --comment "Rate limit clients which reached limit"
+      -A FORWARD -i eth0 -o eth0 -m set --match-set {{ access_point__ipset_shaper }} dst --bytes-gt {{ access_point__traffic_limit }} -j MARK --set-mark 333 -m comment --comment "Rate limit clients which reached limit"
+
+      -A FORWARD -i eth0 -o eth0 -m set --match-set {{ access_point__ipset_shaper }} src -j ACCEPT -m comment --comment "Count and accept clients traffic"
+      -A FORWARD -o eth0 -m state --state RELATED,ESTABLISHED -m set --match-set {{ access_point__ipset_shaper }} dst -j ACCEPT -m comment --comment "Count and accept clients traffic"
       COMMIT
 
       *nat
@@ -257,6 +303,9 @@
 
       -A PREROUTING -i wlan1 -p tcp -d {{ my_public_ip }} --dport 80 -j ACCEPT -m comment --comment "Always accept traffic to myself"
       -A PREROUTING -i wlan1 -p tcp --dport 80 -m set ! --match-set {{ access_point__ipset_acl }} src -j DNAT --to-destination {{ my_public_ip }}:81 -m comment --comment "Captive portal"
+
+      -A PREROUTING -i eth0 -p tcp -d {{ my_public_ip }} --dport 80 -j ACCEPT -m comment --comment "Always accept traffic to myself"
+      -A PREROUTING -i eth0 -p tcp --dport 80 -m set ! --match-set {{ access_point__ipset_acl }} src -j DNAT --to-destination {{ my_public_ip }}:81 -m comment --comment "Captive portal"
 
       :INPUT ACCEPT [0:0]
       :OUTPUT ACCEPT [0:0]
