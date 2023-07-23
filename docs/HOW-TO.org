@@ -1,0 +1,21 @@
+
+* Как разрешить устройству вечный доступ
+
+Стопаем dhcpd
+
+#+BEGIN_SRC bash
+systemctl stop isc-dhcp-server.service
+#+END_SRC
+
+Смотрим в телефоне его MAC для нашей сети, ищем его в /var/lib/dhcp/dhcpd.leases. Устанавливаем дату в далеком будущем для ends и tstp.
+
+Запускаем dhcpd обратно.
+
+Передобавляем соответствующий IP-адрес в ipset с бесконечным таймаутом:
+
+#+BEGIN_SRC bash
+ipset del acl 10.11.XX.XX
+ipset add acl 10.11.XX.XX timeout 0
+#+END_SRC
+
+ACL сохраняется на диск по крону раз в минуту.
