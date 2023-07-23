@@ -1,4 +1,19 @@
 
+* Если отвалилась USB Wifi (не появляется интерфейс)
+
+Например, после обновления драйверов.
+
+#+BEGIN_SRC bash
+git clone https://github.com/fastoe/RTL8812BU
+# они разные ветки держат под разные мажоры ядер
+git checkout v5.13.1
+# в идеале через dkms, но сойдет и так
+make -j4 && make install
+
+modprobe 88x2bu
+#+END_SRC
+
+
 * Как разрешить устройству вечный доступ
 
 Стопаем dhcpd
