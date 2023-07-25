@@ -40,8 +40,8 @@
   ansible.builtin.cron:
     name: store_forever_webcam_picture
     hour: '14'
-    minute: '4'
-    job: "find {{ ratzek_portal__webcam_archive_path }}/ -name '*.jpg' -type f -mmin -5 -exec ln {} {{ ratzek_portal__webcam_daily_archive_path }}/ \\;"
+    minute: '1'
+    job: "find {{ ratzek_portal__webcam_archive_path }}/ -name '*.jpg' -type f -mmin -5 -exec ln {} {{ ratzek_portal__webcam_daily_archive_path }}/ ';'"
 
 - name: "Add cronjob which deletes old webcam shots"
   ansible.builtin.cron:
