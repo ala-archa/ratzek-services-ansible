@@ -34,7 +34,7 @@
     name: get_webcam_picture
     hour: '*'
     minute: '*/5'
-    job: "/usr/bin/wget -q -O {{ ratzek_portal__webcam_archive_path }}/$(date +'\\%F__\\%T').jpg http://www.aksaionline.com/img.php?site=ratsek"
+    job: "/usr/bin/wget -q -O {{ ratzek_portal__webcam_archive_path }}/$(date +'\\%F__\\%T').jpg 'http://{{ ratzek_portal__webcam_user }}:{{ ratzek_portal__webcam_password }}@10.11.3.4/ISAPI/Streaming/channels/101/picture'"
 
 - name: "Add cronjob which saved forever daily webcam image"
   ansible.builtin.cron:

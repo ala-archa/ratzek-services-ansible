@@ -253,6 +253,7 @@
     ratzek_portal__library_path: /var/www/library
     ratzek_portal__webcam_archive_path: /var/www/webcam_archive
     ratzek_portal__webcam_daily_archive_path: /var/www/webcam_daily_archive
+    ratzek_portal__webcam_user: admin
 
     minidlna:
       user: minidlna
