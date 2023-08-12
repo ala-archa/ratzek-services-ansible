@@ -1,0 +1,9 @@
+
+
+all:
+  hosts:
+    ratzek-service:
+      ansible_host: 82.146.59.228
+      ansible_port: 5000
+      ansible_user: root
+      ansible_python_interpreter: /usr/bin/python3
