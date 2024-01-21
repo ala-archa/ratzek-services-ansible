@@ -1,0 +1,11 @@
+[Unit]
+Description=Prometheus exporter for I2C VEML7700 light sensor
+Before=network-pre.target
+Conflicts=shutdown.target
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/veml7700-prometheus-exporter run
+
+[Install]
+WantedBy=basic.target

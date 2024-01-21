@@ -85,6 +85,9 @@
       weather-station:
         - targets:
             - 127.0.0.1:9756
+      veml7700-light-sensor:
+        - targets:
+            - 127.0.0.1:9757
       mikrotik-exporter:
         - targets:
             - 127.0.0.1:9436
@@ -100,6 +103,7 @@
         file_sd_configs:
           - files:
               - "{{ prometheus_config_dir }}/file_sd/weather-station.yml"
+              - "{{ prometheus_config_dir }}/file_sd/veml7700-light-sensor.yml"
       - job_name: mikrotik-exporter
         file_sd_configs:
           - files:

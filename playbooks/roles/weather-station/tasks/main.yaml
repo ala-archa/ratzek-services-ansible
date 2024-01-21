@@ -14,7 +14,7 @@
     path: /etc/modules
     line: i2c-dev
 
-- name: Copy systemd unit file
+- name: Copy systemd unit file for BSBMP280
   copy:
     src: "bsbmp-exporter.service"
     dest: "/etc/systemd/system/bsbmp-exporter.service"
@@ -23,13 +23,38 @@
     mode: "0644"
   register: bsbmp_exporter_register_unit
 
+- name: Copy systemd unit file for VEML7700
+  copy:
+    src: "veml7700-prometheus-exporter.service"
+    dest: "/etc/systemd/system/veml7700-prometheus-exporter.service"
+    owner: "root"
+    group: "root"
+    mode: "0644"
+  register: veml7700_exporter_register_unit
+
+- name: Copy configuration file for VEML7700
+  copy:
+    src: "veml7700-prometheus-exporter.yaml"
+    dest: "/etc/veml7700-prometheus-exporter.yaml"
+    owner: "root"
+    group: "root"
+    mode: "0644"
+  register: veml7700_exporter_register_config
+
 - name: Reload systemd daemon
   command: "systemctl daemon-reload"
-  when: bsbmp_exporter_register_unit is changed
+  when: bsbmp_exporter_register_unit is changed or veml7700_exporter_register_unit is changed
 
 - name: Restart bsbmp-exporter service
   service:
     name: "bsbmp-exporter"
     state: "restarted"
-    enabled: True
+    enabled: "True"
   when: bsbmp_exporter_register_unit is changed
+
+- name: Restart veml7700-prometheus-exporter service
+  service:
+    name: "veml7700-prometheus-exporter"
+    state: "restarted"
+    enabled: "True"
+  when: veml7700_exporter_register_unit is changed or veml7700_exporter_register_config is changed
